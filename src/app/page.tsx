@@ -1,5 +1,14 @@
 import Image from "next/image";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 export default function Home() {
   return (
@@ -13,29 +22,89 @@ export default function Home() {
           className="dark:invert"
           priority
         />
-        <h1 className="text-3xl font-bold text-center">
-          Next.js 15 Skeleton
-        </h1>
-        <p className="text-center text-base text-muted-foreground">
-          A modern starter template featuring Next.js 15, Auth.js for authentication, next-themes for dark mode, shadcn/ui for beautiful components, and MongoDB for persistent storage.
-        </p>
-        <ul className="list-disc list-inside text-left text-sm space-y-2">
-          <li>
-            <span className="font-semibold">Next.js 15</span> – App Router, Server Components, and more.
-          </li>
-          <li>
-            <span className="font-semibold">Auth.js</span> – Secure, flexible authentication.
-          </li>
-          <li>
-            <span className="font-semibold">next-themes</span> – Seamless dark/light mode.
-          </li>
-          <li>
-            <span className="font-semibold">shadcn/ui</span> – Accessible, customizable UI components.
-          </li>
-          <li>
-            <span className="font-semibold">MongoDB</span> – Scalable NoSQL database integration.
-          </li>
-        </ul>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <h1 className="text-3xl font-bold text-center">
+                Next.js 15 Skeleton
+              </h1>
+            </CardTitle>
+            <CardDescription>
+              <p className="text-center text-base text-muted-foreground">
+                A modern starter template featuring Next.js 15, Auth.js for authentication, next-themes for dark mode, shadcn/ui for beautiful components, and MongoDB for persistent storage.
+              </p>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-inside text-left text-sm space-y-2">
+              <li>
+                <span className="font-semibold">
+                  <a
+                    href="https://nextjs.org/docs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-primary"
+                  >
+                    Next.js 15
+                  </a>
+                </span>
+                – App Router, Server Components, and more.
+              </li>
+              <li>
+                <span className="font-semibold">
+                  <a
+                    href="https://authjs.dev/getting-started"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-primary"
+                  >
+                    Auth.js
+                  </a>
+                </span>
+                – Secure, flexible authentication.
+              </li>
+              <li>
+                <span className="font-semibold">
+                  <a
+                    href="https://github.com/pacocoursey/next-themes"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-primary"
+                  >
+                    next-themes
+                  </a>
+                </span>
+                – Seamless dark/light mode.
+              </li>
+              <li>
+                <span className="font-semibold">
+                  <a
+                    href="https://ui.shadcn.com/docs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-primary"
+                  >
+                    shadcn/ui
+                  </a>
+                </span>
+                – Accessible, customizable UI components.
+              </li>
+              <li>
+                <span className="font-semibold">
+                  <a
+                    href="https://www.mongodb.com/docs/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-primary"
+                  >
+                    MongoDB
+                  </a>
+                </span>
+                – Scalable NoSQL database integration.
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
         <div className="flex gap-4 mt-6 items-center">
           <a
             href="https://github.com/your-repo"

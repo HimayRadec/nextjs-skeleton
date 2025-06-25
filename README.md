@@ -25,7 +25,9 @@ This project uses the following libraries:
    - [components.json documentation](https://ui.shadcn.com/docs/components-json)
    - [Themes](https://ui.shadcn.com/themes)
    - [Theming documentation](https://ui.shadcn.com/docs/theming)
-- **Auth.js** — Authentication for Next.js.
 - **next-themes** — Theme support for Next.js.
+- **Auth.js** — Authentication for Next.js.
+   - [MongoDB Adapter](https://authjs.dev/getting-started/adapters/mongodb)
+- **MongoDB** - Database
 
 ---
