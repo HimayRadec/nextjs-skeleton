@@ -2,18 +2,34 @@ import Image from "next/image";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { auth } from "@/auth"
+import GoogleSignInButton from "@/components/signin-button";
+import { SignOut } from "@/components/signout-button";
 
-export default function Home() {
+
+export default async function Home() {
+  const session = await auth()
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-background text-foreground">
       <main className="flex flex-col items-center gap-8 max-w-xl w-full">
+        {session ? (
+          <div className="flex flex-col items-center gap-4">
+            <p>Welcome, {session.user?.name}!</p>
+            <SignOut />
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-4">
+            <p>Not Logged In</p>
+            <GoogleSignInButton />
+          </div>
+        )}
         <Image
           src="/next.svg"
           alt="Next.js Logo"
@@ -104,29 +120,32 @@ export default function Home() {
               </li>
             </ul>
           </CardContent>
+          <CardFooter>
+            <div className="flex gap-4 mt-6 items-center">
+              <a
+                href="https://github.com/your-repo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition"
+              >
+                View on GitHub
+              </a>
+              <ModeToggle />
+              <a
+                href="https://nextjs.org/docs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-4 py-2 rounded-md border border-input hover:bg-accent transition"
+              >
+                Next.js Docs
+              </a>
+            </div>
+          </CardFooter>
         </Card>
-        <div className="flex gap-4 mt-6 items-center">
-          <a
-            href="https://github.com/your-repo"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition"
-          >
-            View on GitHub
-          </a>
-          <ModeToggle />
-          <a
-            href="https://nextjs.org/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center px-4 py-2 rounded-md border border-input hover:bg-accent transition"
-          >
-            Next.js Docs
-          </a>
-        </div>
+
       </main>
       <footer className="mt-12 text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Next.js 15 Skeleton. Built with love.
+        © {new Date().getFullYear()} Next.js 15 Skeleton. Crafted with attention to detail.
       </footer>
     </div>
   );
