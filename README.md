@@ -33,7 +33,7 @@ This project uses the following libraries:
 ---
 Setting up authjs
 1. run 'npx auth secret' 
-2. add your mongo db to .env.local MONGODB_URI=
+2. add your mongo db to .env.local MONGODB_URI=mongodb+srv://HimayHue:qwertyui@radec.qwerty.mongodb.net/HimayHue?retryWrites=true&w=majority&appName=NextJS_Skeleton
 
 Setting Up Google Auth
 Go to this link https://console.cloud.google.com/cloud-resource-manager
@@ -52,3 +52,5 @@ AUTH_GOOGLE_SECRET={CLIENT_SECRET}
 
 You will also need a DB_NAME environment variable which will be where all the users in your mongodb uri will be stored. 
 For example: DATABASE_NAME=HimayHue
+
+TODO: Explain authjs and middleware and adapater with edge runtime. Also 
