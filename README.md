@@ -134,3 +134,5 @@ For more info, see:
 * [Next.js Documentation](https://nextjs.org/docs)
 * [Auth.js Docs](https://authjs.dev)
 * [shadcn/ui Docs](https://ui.shadcn.com)
+
+README TODO: Explain we also use zod and that after account creation users will be forced to select a username and not be allowed to move forward until this is complete

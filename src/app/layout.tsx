@@ -35,7 +35,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <nav className="w-full flex items-center justify-between py-4 px-8 border-b border-gray-200 dark:border-gray-800 mb-6">
+          <nav className="w-full flex items-center justify-between py-4 px-8 border-b border-gray-200 dark:border-gray-800">
             <ul className="flex space-x-6">
               <li>
                 <Link href="/" className="text-base font-medium hover:underline">

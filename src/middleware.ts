@@ -3,9 +3,10 @@ import authConfig from "@/auth.config"
 
 
 export const { auth: middleware } = NextAuth(authConfig)
-console.log("🔒 Middleware is running")
 
 
 export const config = {
-   matcher: ["/dashboard/:path*"], // Limit to just /dashboard for now
+   matcher: [
+      "/((?!api|_next/static|_next/image|favicon.ico|.*\\.svg$|signin|$).*)",
+   ]
 }

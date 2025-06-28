@@ -4,7 +4,7 @@ import { Button } from "./ui/button"
 
 export function SignOutButton() {
    return (
-      <Button onClick={() => signOut({ callbackUrl: "/" })}>
+      <Button onClick={() => signOut({ callbackUrl: "/", redirect: true })}>
          Sign Out
       </Button>
    )
