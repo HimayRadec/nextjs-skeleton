@@ -1,18 +1,35 @@
-// the point of this file is to be able to use middleware with a database adapter on the edge runtime
 import Google from "next-auth/providers/google"
 import type { NextAuthConfig } from "next-auth"
 
-export default {
-   callbacks: {
-      //  Require authentication for all pages by default through the middleware
-      authorized: async ({ auth }) => {
-         return !!auth
-      },
-   },
+const config = {
    pages: {
       signIn: "/signin",
    },
    providers: [
       Google,
    ],
+   callbacks: {
+      authorized: async ({ auth }) => {
+         // Only allow access if logged in
+         return !!auth
+      },
+
+      async jwt({ token, user }) {
+         if (user) {
+            token.id = user.id
+            token.username = user.username
+         }
+         return token
+      },
+
+      async session({ session, token }) {
+         if (session.user) {
+            session.user.id = token.id as string
+            session.user.username = token.username as string
+         }
+         return session
+      },
+   },
 } satisfies NextAuthConfig
+
+export default config

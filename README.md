@@ -136,3 +136,10 @@ For more info, see:
 * [shadcn/ui Docs](https://ui.shadcn.com)
 
 README TODO: Explain we also use zod and that after account creation users will be forced to select a username and not be allowed to move forward until this is complete
+
+- Describe naming conventions
+  - kebab-case for files
+  - PascalCase for components
+  - camelCase for variables, functions and other data types. 
+  https://dev.to/vikasparmar/nextjs-component-naming-conventions-best-practices-for-file-and-component-names-39o2
+  
