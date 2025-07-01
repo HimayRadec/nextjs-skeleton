@@ -21,6 +21,7 @@ import {
    FormLabel,
    FormMessage
 } from "@/components/ui/form"
+import { getSession } from "next-auth/react"
 
 export default function UsernamePage() {
    return (
@@ -65,6 +66,7 @@ function UpdateUsernameForm() {
          setLoading(false)
       }
       else {
+         router.refresh()
          router.push("/dashboard")
       }
    }

@@ -135,7 +135,7 @@ For more info, see:
 * [Auth.js Docs](https://authjs.dev)
 * [shadcn/ui Docs](https://ui.shadcn.com)
 
-README TODO: Explain we also use zod and that after account creation users will be forced to select a username and not be allowed to move forward until this is complete
+README TODO: Explain we also use zod and that after account creation users are assigned random usernames that they can change whenever.
 
 - Describe naming conventions
   - kebab-case for files
