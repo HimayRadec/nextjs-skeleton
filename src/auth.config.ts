@@ -3,14 +3,23 @@ import type { NextAuthConfig } from "next-auth"
 
 const config = {
    pages: {
-      signIn: "/signin",
+      signIn: "/auth/signin",
    },
    providers: [
       Google,
    ],
    callbacks: {
-      authorized: async ({ auth }) => {
+      authorized({ request: { nextUrl }, auth }) {
          // Only allow access if logged in
+         const isLoggedIn = !!auth?.user;
+         const { pathname } = nextUrl;
+         // const role = auth?.user.role || 'user';
+
+         // Redirect to the dashboard if logged in and trying to access the signin page
+         if (pathname.startsWith('/auth/signin') && isLoggedIn) {
+            return Response.redirect(new URL('/dashboard', nextUrl));
+         }
+
          return !!auth
       },
 
