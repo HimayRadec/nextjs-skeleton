@@ -31,17 +31,17 @@ export async function POST(req: Request) {
       }
 
       // If the user has already set a username, check cooldown
-      if (userData.usernameLastChanged) {
-         const now = new Date()
-         const dataUserNameLastChanged = new Date(userData.usernameLastChanged)
-         const cooldownInMs = 1000 * 60 * 60 * 24 * 30 // TODO: Make this a configurable value, currently set to 30 days
-         if (now.getTime() - dataUserNameLastChanged.getTime() < cooldownInMs) {
-            const nextAvailable = new Date(dataUserNameLastChanged.getTime() + cooldownInMs)
-            return NextResponse.json({
-               message: `Username can only be changed once every 30 days. Next available: ${nextAvailable.toISOString()}`
-            }, { status: 403 })
-         }
-      }
+      // if (userData.usernameLastChanged) {
+      //    const now = new Date()
+      //    const dataUserNameLastChanged = new Date(userData.usernameLastChanged)
+      //    const cooldownInMs = 1000 * 60 * 60 * 24 * 30 // TODO: Make this a configurable value, currently set to 30 days
+      //    if (now.getTime() - dataUserNameLastChanged.getTime() < cooldownInMs) {
+      //       const nextAvailable = new Date(dataUserNameLastChanged.getTime() + cooldownInMs)
+      //       return NextResponse.json({
+      //          message: `Username can only be changed once every 30 days. Next available: ${nextAvailable.toISOString()}`
+      //       }, { status: 403 })
+      //    }
+      // }
 
       // Check for conflicts
       const userNameAlreadyExists = await users.findOne({ usernameLowercase: usernameLowercased })

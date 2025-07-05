@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Link from "next/link";
+
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,33 +26,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+    <SessionProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <nav className="w-full flex items-center justify-between py-4 px-8 border-b border-gray-200 dark:border-gray-800">
-            <ul className="flex space-x-6">
-              <li>
-                <Link href="/" className="text-base font-medium hover:underline">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/dashboard" className="text-base font-medium hover:underline">
-                  Dashboard
-                </Link>
-              </li>
-            </ul>
-          </nav>
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
+    </SessionProvider>
   );
 }

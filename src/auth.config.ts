@@ -1,6 +1,8 @@
 import Google from "next-auth/providers/google"
 import type { NextAuthConfig } from "next-auth"
 
+const PUBLIC_ROUTES = ["/auth/signin", "/auth/signup", "/auth/forgot-password"]
+
 const config = {
    pages: {
       signIn: "/auth/signin",
@@ -25,6 +27,7 @@ const config = {
       jwt({ token, user, trigger, session }) {
          if (user) {
             token.id = user.id as string;
+            token.username = user.username as string;
             token.role = user.role as string;
          }
          if (trigger === "update" && session) {
@@ -35,9 +38,14 @@ const config = {
 
       session({ session, token }) {
          session.user.id = token.id;
+         session.user.username = token.username;
          session.user.role = token.role;
+
+         console.log(`[AUTHJS SESSION]: ${JSON.stringify(session, null, 2)}\n`);
          return session;
       }
+
+
    },
 } satisfies NextAuthConfig
 

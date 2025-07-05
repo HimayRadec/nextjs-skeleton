@@ -21,7 +21,7 @@ import {
    FormLabel,
    FormMessage
 } from "@/components/ui/form"
-import { getSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
 
 export default function UsernamePage() {
    return (
@@ -35,6 +35,8 @@ function UpdateUsernameForm() {
    const router = useRouter()
    const [error, setError] = useState("")
    const [loading, setLoading] = useState(false)
+   const { data: session, update } = useSession();
+
 
    const formSchema = z.object({
       username: z.string().min(2, {
@@ -66,6 +68,12 @@ function UpdateUsernameForm() {
          setLoading(false)
       }
       else {
+         if (session?.user) {
+            update({
+               ...session.user,
+               username: values.username // Update session with new username
+            })
+         }
          router.refresh()
          router.push("/dashboard")
       }

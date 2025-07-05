@@ -5,8 +5,12 @@ import { useSearchParams } from "next/navigation"
 import { Button } from "./ui/button"
 import { FcGoogle } from "react-icons/fc";
 
+/**
+ * A button component that redirects the user to the sign-in page.
+ * When clicked, it triggers the NextAuth `signIn` function to start the authentication flow.
+ */
 export function SignInButton() {
-   return <Button onClick={() => signIn()}>Sign In</Button>
+   return <Button className="w-full" onClick={() => signIn()}>Sign In</Button>
 }
 
 

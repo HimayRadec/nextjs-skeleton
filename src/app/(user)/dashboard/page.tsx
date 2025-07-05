@@ -14,6 +14,7 @@ import { SignOutButton } from "@/components/signout-button";
 
 export default async function DashboardPage() {
    const session = await auth();
+   console.log(`[DASHBOARD SESSION]: ${JSON.stringify(session, null, 2)}`);
 
    return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-background text-foreground">
