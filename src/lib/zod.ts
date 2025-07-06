@@ -1,8 +1,9 @@
 
 import { object, string } from "zod";
-import * as z from "zod/v4";
 
+//TODO: consider moving these constants to a separate file for better organization
 export const USERNAME_MINIMUM_LENGTH = 3;
+export const USERNAME_MAXIMUM_LENGTH = 32;
 export const PASSWORD_MINIMUM_LENGTH = 5;
 export const PASSWORD_MAXIMUM_LENGTH = 32;
 
@@ -19,6 +20,18 @@ export const emailSignInSchema = object({
    email: string({ required_error: "Email is required" })
       .min(1, "Email is required")
       .email("Invalid email"),
+   password: string({ required_error: "Password is required" })
+      .min(1, "Password is required")
+      .min(PASSWORD_MINIMUM_LENGTH, `Password must be more than ${PASSWORD_MINIMUM_LENGTH} characters`)
+      .max(PASSWORD_MAXIMUM_LENGTH, `Password must be less than ${PASSWORD_MAXIMUM_LENGTH} characters`),
+});
+
+export const usernameSignInSchema = object({
+   username: string({ required_error: "Username is required" })
+      .min(USERNAME_MINIMUM_LENGTH, `Username must be at least ${USERNAME_MINIMUM_LENGTH} characters`)
+      .max(USERNAME_MAXIMUM_LENGTH, `Username must be less than ${USERNAME_MAXIMUM_LENGTH} characters`)
+      .regex(/^[a-zA-Z0-9_.]+$/, "Username can only contain letters, numbers, underscores, and dots"),
+
    password: string({ required_error: "Password is required" })
       .min(1, "Password is required")
       .min(PASSWORD_MINIMUM_LENGTH, `Password must be more than ${PASSWORD_MINIMUM_LENGTH} characters`)
