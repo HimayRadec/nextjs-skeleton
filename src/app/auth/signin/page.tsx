@@ -12,7 +12,7 @@ import CredentialsSignInForm from "@/components/credentials-signin-form";
 import { GoogleSignInButton } from "@/components/signin-buttons";
 
 import { z } from "zod";
-import { signInSchema } from "@/lib/zod";
+import { emailSignInSchema } from "@/lib/zod";
 import ErrorMessage from "@/components/error-message";
 import { handleCredentialsSignin } from "@/app/actions/authActions";
 
@@ -46,8 +46,8 @@ export default function SignIn() {
       router.replace("/auth/signin");
    }, [error, router]);
 
-   const form = useForm<z.infer<typeof signInSchema>>({
-      resolver: zodResolver(signInSchema),
+   const form = useForm<z.infer<typeof emailSignInSchema>>({
+      resolver: zodResolver(emailSignInSchema),
       defaultValues: {
          email: "",
          password: "",
@@ -55,7 +55,7 @@ export default function SignIn() {
    });
 
    // Function to handle form submission
-   const onSubmit = async (values: z.infer<typeof signInSchema>) => {
+   const onSubmit = async (values: z.infer<typeof emailSignInSchema>) => {
       try {
          const result = await handleCredentialsSignin(values);
          if (result?.message) {
@@ -63,38 +63,36 @@ export default function SignIn() {
          }
       }
       catch (error) {
-         console.log("An unexpected error occurred. Please try again.");
+         console.log(`An unexpected error occurred. Please try again. Error: ${error}`);
       }
    };
 
    return (
-      <div className="grow flex items-center justify-center">
-         <Card className="w-full border-none">
-            <CardHeader>
-               <CardTitle>
-                  Login to your account
-               </CardTitle>
-               <CardDescription>
-                  Enter your email below to login to your account
-               </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-               {globalError && <ErrorMessage error={globalError} />}
-               <CredentialsSignInForm form={form} onSubmit={onSubmit} />
-               <GoogleSignInButton />
-            </CardContent>
-            <CardFooter className="flex flex-col gap-2">
-               <p>
-                  Don&apos;t have an account?{" "}
-                  <a href="/auth/signup" className="text-blue-500 hover:underline">
-                     Sign up
-                  </a>
-               </p>
-               <a href="/auth/forgot-password" className="text-blue-500 hover:underline">
-                  Forgot your password?
+      <Card className="w-full border-none">
+         <CardHeader>
+            <CardTitle>
+               Login to your account
+            </CardTitle>
+            <CardDescription>
+               Enter your email below to login to your account
+            </CardDescription>
+         </CardHeader>
+         <CardContent className="space-y-4">
+            {globalError && <ErrorMessage error={globalError} />}
+            <CredentialsSignInForm form={form} onSubmit={onSubmit} />
+            <GoogleSignInButton />
+         </CardContent>
+         <CardFooter className="flex flex-col gap-2">
+            <p>
+               Don&apos;t have an account?{" "}
+               <a href="/auth/signup" className="text-blue-500 hover:underline">
+                  Sign up
                </a>
-            </CardFooter>
-         </Card>
-      </div>
+            </p>
+            <a href="/auth/forgot-password" className="text-blue-500 hover:underline">
+               Forgot your password?
+            </a>
+         </CardFooter>
+      </Card>
    );
 }

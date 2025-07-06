@@ -1,6 +1,6 @@
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { signInSchema } from "./lib/zod";
+import { emailSignInSchema } from "./lib/zod";
 import prisma from "./lib/prisma";
 
 import bcryptjs from "bcryptjs";
@@ -28,7 +28,7 @@ const config = {
             let user = null;
 
             // validate credentials
-            const parsedCredentials = signInSchema.safeParse(credentials);
+            const parsedCredentials = emailSignInSchema.safeParse(credentials);
             if (!parsedCredentials.success) {
                console.error("Invalid credentials:", parsedCredentials.error.errors);
                return null;

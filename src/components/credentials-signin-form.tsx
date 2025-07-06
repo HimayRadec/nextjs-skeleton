@@ -5,13 +5,13 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input';
 import LoadingButton from "@/components/loading-button";
 import { UseFormReturn } from 'react-hook-form';
-import { signInSchema } from "@/lib/zod";
+import { emailSignInSchema } from "@/lib/zod";
 import { z } from "zod";
 
 
 interface CredentialsSignInFormProps {
-   form: UseFormReturn<z.infer<typeof signInSchema>>;
-   onSubmit: (values: z.infer<typeof signInSchema>) => void;
+   form: UseFormReturn<z.infer<typeof emailSignInSchema>>;
+   onSubmit: (values: z.infer<typeof emailSignInSchema>) => void;
 }
 
 export default function CredentialsSignInForm({
