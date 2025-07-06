@@ -1,6 +1,6 @@
 # Next.js Skeleton Project
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). It includes styling with **shadcn/ui**, authentication via **Auth.js (NextAuth)**, and a **MongoDB** database adapter, with full support for server/client auth and Edge-compatible middleware.
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). It includes styling with **shadcn/ui**, authentication via **Auth.js (NextAuth)**, and a **MongoDB** database using **Prisma**, with full support for server/client auth and Edge-compatible middleware.
 
 ---
 
@@ -14,12 +14,11 @@ npm install
 
 ### 2. Set Up Environment Variables
 
-Create a `.env.local` file at the root of the project and add:
+Create a `.env` file at the root of the project and add:
 
 ```env
 # MongoDB
-MONGODB_URI=mongodb+srv://ExampleString:example@example.string.mongodb.net/ExampleString?retryWrites=true&w=majority&appName=NextJS_Skeleton
-DATABASE_NAME=your-db-name
+DATABASE_URL=mongodb+srv://USER:PASSWORD@cluster.mongodb.net/DATABASENAME?retryWrites=true&w=majority&appName=APPNAME
 
 # Auth.js (Google OAuth)
 AUTH_GOOGLE_ID=your-google-client-id
@@ -56,17 +55,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
    * **Authorized JavaScript origins**: `http://localhost:3000`
    * **Authorized redirect URIs**: `http://localhost:3000/api/auth/callback/google`
 
-Paste the credentials into `.env.local`.
+Paste the credentials into `.env`.
 
 ---
 
-## 🧠 Auth.js Middleware vs Adapter (Edge Runtime Note)
+## 🨠 Auth.js Middleware vs Adapter (Edge Runtime Note)
 
 This project separates **auth config** and **auth instance** for compatibility with middleware:
 
 * `auth.config.ts`: Includes provider setup, routes (e.g., custom signin), and `authorized()` callback. ✅ **Safe for Edge runtime**
-* `auth.ts`: Full `NextAuth()` instance with the MongoDB adapter and session strategy. ❌ **Not Edge-compatible** — avoid importing this in `middleware.ts`
-* `middleware.ts`: Uses `NextAuth(authConfig)` only with the edge-safe `auth.config.ts` to avoid MongoDB adapter runtime errors.
+* `auth.ts`: Full `NextAuth()` instance with the Prisma MongoDB adapter and session strategy. ❌ **Not Edge-compatible** — avoid importing this in `middleware.ts`
+* `middleware.ts`: Uses `NextAuth(authConfig)` only with the edge-safe `auth.config.ts` to avoid runtime errors.
 
 This separation ensures:
 
@@ -75,77 +74,103 @@ This separation ensures:
 
 ---
 
-## ✍️ Creating a Custom Sign-In Page
+## 🧹 Prisma Setup (MongoDB)
 
-Define your custom page at `app/signin/page.tsx`:
+This project uses Prisma with MongoDB as its adapter. Key commands:
 
-```tsx
-'use client'
-import { signIn } from 'next-auth/react'
-import { Button } from '@/components/ui/button'
-import { useSearchParams } from 'next/navigation'
+```bash
+# Apply schema changes to MongoDB
+npx prisma db push
 
-export default function SignInPage() {
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || "/"
+# Generate the Prisma Client
+npx prisma generate
 
-  return (
-    <Button onClick={() => signIn("google", { callbackUrl })}>
-      Sign in with Google
-    </Button>
-  )
-}
+# Open the Prisma GUI (Prisma Studio)
+npx prisma studio
 ```
 
-And in `auth.config.ts`, add:
+If you delete documents manually from MongoDB Atlas, no additional syncing is needed unless you're altering your schema — in which case, rerun:
 
-```ts
-pages: {
-  signIn: "/signin",
-}
+```bash
+npx prisma db push
+```
+
+> Be sure your schema contains the correct `DATABASE_URL` in `.env`
+
+```env
+DATABASE_URL="mongodb+srv://USER:PASSWORD@cluster.mongodb.net/DATABASENAME?retryWrites=true&w=majority&appName=APPNAME"
 ```
 
 ---
 
-## 🧩 Dependencies Used
+## 📉 Dependencies Used
 
 * **Next.js 15** — App Router + Edge support
 * **shadcn/ui** — Component and theme system
 * **tailwindcss** — Utility-first styling
 * **next-themes** — Theme toggling
 * **Auth.js (NextAuth)** — Authentication
-* **MongoDB + @auth/mongodb-adapter** — DB persistence
+* **Prisma + MongoDB** — DB persistence with `@prisma/client` and `@prisma/adapter-mongodb`
+* **zod** — Schema validation for forms
 * **react-icons** — Optional icon support
 
 ---
 
-## ✅ TODO
+## ✅ Features
 
-* [ ] Add form-based Credentials provider support
-* [ ] Add Apple OAuth provider support
-* [ ] Add role-based access controls (RBAC)
-* [ ] Add unit tests for protected routes and auth
-* [ ] Optional: Integrate Supabase or Neon for Postgres fallback
+* 🔐 Google OAuth login
+* 🨠 Credentials-based login with bcrypt password hashing
+* 🧠 Session-based user state
+* 👤 Users are automatically assigned a random username on first sign-in
+* 🔄 Users can update their username with a **30-day cooldown**
+* 🔎 Middleware-protected routes with role-based support
+* 🎨 Theme support with `shadcn/ui` and `next-themes`
 
 ---
 
-For more info, see:
+## 🔤 Naming Conventions
+
+* `kebab-case`: file and folder names (e.g., `set-username.ts`)
+* `PascalCase`: React components (e.g., `LoginForm.tsx`)
+* `camelCase`: variables, functions, and data properties
+
+> Based on [Next.js naming convention practices](https://dev.to/vikasparmar/nextjs-component-naming-conventions-best-practices-for-file-and-component-names-39o2)
+
+---
+
+## 📦 Commit Message Format
+
+```bash
+type(scope?): Action
+```
+
+### Common Types
+
+- `build`
+- `chore`
+- `ci`
+- `docs`
+- `feat`
+- `fix`
+- `perf`
+- `refactor`
+- `revert`
+- `style`
+- `test`
+
+### Examples
+
+```bash
+chore: ran tests on travis ci
+feat(blog): Added a comment section
+```
+
+---
+
+## 📙 References
 
 * [Next.js Documentation](https://nextjs.org/docs)
 * [Auth.js Docs](https://authjs.dev)
 * [shadcn/ui Docs](https://ui.shadcn.com)
-
-README TODO: Explain we also use zod and that after account creation users are assigned random usernames that they can change whenever.
-
-- Describe naming conventions
-  - kebab-case for files
-  - PascalCase for components
-  - camelCase for variables, functions and other data types. 
-  https://dev.to/vikasparmar/nextjs-component-naming-conventions-best-practices-for-file-and-component-names-39o2
-
-  DATABASE_URL="mongodb+srv://user:password@cluster.mongodb.net/database-name"
-  is the correct way to format your database URL for mongodb
-
-  updating prisma schema means you have to run npm prisma db push
-
-  
+* [Prisma Docs](https://www.prisma.io/docs)
+* [Conventional Commits](https://www.conventionalcommits.org)
