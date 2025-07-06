@@ -1,17 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-   Form,
-   FormControl,
-   FormField,
-   FormItem,
-   FormLabel,
-   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import LoadingButton from "@/components/loading-button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import ErrorMessage from "@/components/error-message";
 
 import { useForm } from "react-hook-form";
@@ -23,6 +13,7 @@ import {
    handleSignUp,
 } from "@/app/actions/authActions";
 import CredentialsSignUpForm from "@/components/credentials-signup-form";
+import { GoogleSignInButton } from "@/components/signin-buttons";
 
 export default function SignUp() {
    const [globalError, setGlobalError] = useState("");
@@ -37,6 +28,12 @@ export default function SignUp() {
       },
    });
 
+   // TODO: turn into a reusable function
+   /*
+      Function to handle form submission
+      This function will be called when the user submits the sign-up form.
+      It will validate the input, call the sign-up action, and handle any errors.
+   */
    const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
       try {
          const result: ServerActionResponse = await handleSignUp(values);
@@ -47,11 +44,14 @@ export default function SignUp() {
                password: values.password,
             };
             await handleCredentialsSignin(valuesForSignin);
-         } else {
+         }
+         else {
             setGlobalError(result.message);
          }
-      } catch (error) {
+      }
+      catch (error) {
          setGlobalError("An unexpected error occurred. Please try again.");
+         console.error("Error during sign up:", error);
       }
    };
 
@@ -65,10 +65,20 @@ export default function SignUp() {
                Fill in the form below to create a new account
             </CardDescription>
          </CardHeader>
-         <CardContent>
+         <CardContent className="space-y-4">
             {globalError && <ErrorMessage error={globalError} />}
             <CredentialsSignUpForm form={form} onSubmit={onSubmit} />
+            <p className="text-center">or</p>
+            <GoogleSignInButton />
          </CardContent>
+         <CardFooter className="flex flex-col gap-2">
+            <p>
+               Already have have an account?{" "}
+               <a href="/auth/signin" className="text-blue-500 hover:underline">
+                  Sign in
+               </a>
+            </p>
+         </CardFooter>
       </Card>
    );
 }

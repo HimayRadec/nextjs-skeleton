@@ -54,7 +54,7 @@ export default function SignIn() {
       },
    });
 
-   // Function to handle form submission
+   // TODO: turn into a reusable function
    const onSubmit = async (values: z.infer<typeof emailSignInSchema>) => {
       try {
          const result = await handleCredentialsSignin(values);
@@ -63,6 +63,7 @@ export default function SignIn() {
          }
       }
       catch (error) {
+         setGlobalError("An unexpected error occurred. Please try again.");
          console.log(`An unexpected error occurred. Please try again. Error: ${error}`);
       }
    };
@@ -80,6 +81,7 @@ export default function SignIn() {
          <CardContent className="space-y-4">
             {globalError && <ErrorMessage error={globalError} />}
             <CredentialsSignInForm form={form} onSubmit={onSubmit} />
+            <p className="text-center">or</p>
             <GoogleSignInButton />
          </CardContent>
          <CardFooter className="flex flex-col gap-2">
