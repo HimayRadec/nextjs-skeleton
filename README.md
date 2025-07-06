@@ -142,4 +142,10 @@ README TODO: Explain we also use zod and that after account creation users are a
   - PascalCase for components
   - camelCase for variables, functions and other data types. 
   https://dev.to/vikasparmar/nextjs-component-naming-conventions-best-practices-for-file-and-component-names-39o2
+
+  DATABASE_URL="mongodb+srv://user:password@cluster.mongodb.net/database-name"
+  is the correct way to format your database URL for mongodb
+
+  updating prisma schema means you have to run npm prisma db push
+
   

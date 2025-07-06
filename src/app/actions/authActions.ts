@@ -32,7 +32,11 @@ export async function handleCredentialsSignin({ email, password }: {
 
 
 export async function handleGithubSignin() {
-   await signIn("github", { redirectTo: "/" });
+   await signIn("github", { redirectTo: "/dashboard" });
+}
+
+export async function handleGoogleSignin() {
+   await signIn("google", { redirectTo: "/dashboard" });
 }
 
 export async function handleSignOut() {
@@ -74,7 +78,8 @@ export async function handleSignUp({ name, email, password, confirmPassword }: {
       });
 
       return { success: true, message: "Account created successfully." };
-   } catch (error) {
+   }
+   catch (error) {
       console.error("Error creating account:", error);
       return { success: false, message: "An unexpected error occurred. Please try again." };
    }
