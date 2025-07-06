@@ -1,31 +1,24 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-   Form,
-   FormControl,
-   FormField,
-   FormItem,
-   FormLabel,
-   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+   Card,
+   CardContent,
+   CardDescription,
+   CardFooter,
+   CardHeader,
+   CardTitle,
+} from "@/components/ui/card"
+import CredentialsSignInForm from "@/components/credentials-signin-form";
+import { GoogleSignInButton } from "@/components/signin-buttons";
 
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
 import { signInSchema } from "@/lib/zod";
-import LoadingButton from "@/components/loading-button";
-import {
-   handleCredentialsSignin,
-   handleGoogleSignin,
-} from "@/app/actions/authActions";
-import { useState, useEffect } from "react";
 import ErrorMessage from "@/components/error-message";
-import { Button } from "@/components/ui/button";
+import { handleCredentialsSignin } from "@/app/actions/authActions";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignIn() {
@@ -35,6 +28,7 @@ export default function SignIn() {
 
    const [globalError, setGlobalError] = useState<string>("");
 
+   // Handle error from query parameters
    useEffect(() => {
       if (error) {
          switch (error) {
@@ -60,6 +54,7 @@ export default function SignIn() {
       },
    });
 
+   // Function to handle form submission
    const onSubmit = async (values: z.infer<typeof signInSchema>) => {
       try {
          const result = await handleCredentialsSignin(values);
@@ -73,79 +68,32 @@ export default function SignIn() {
    };
 
    return (
-      <div className="grow flex items-center justify-center p-4">
-         <Card className="w-full max-w-md">
+      <div className="grow flex items-center justify-center">
+         <Card className="w-full border-none">
             <CardHeader>
-               <CardTitle className="text-3xl font-bold text-center text-gray-800">
-                  Welcome Back
+               <CardTitle>
+                  Login to your account
                </CardTitle>
+               <CardDescription>
+                  Enter your email below to login to your account
+               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
                {globalError && <ErrorMessage error={globalError} />}
-               <Form {...form}>
-                  <form
-                     onSubmit={form.handleSubmit(onSubmit)}
-                     className="space-y-8"
-                  >
-                     <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                           <FormItem>
-                              <FormLabel>Email</FormLabel>
-                              <FormControl>
-                                 <Input
-                                    type="email"
-                                    placeholder="Enter your email address"
-                                    autoComplete="off"
-                                    {...field}
-                                 />
-                              </FormControl>
-                              <FormMessage />
-                           </FormItem>
-                        )}
-                     />
-
-                     <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                           <FormItem>
-                              <FormLabel>Password</FormLabel>
-                              <FormControl>
-                                 <Input
-                                    type="password"
-                                    placeholder="Enter password"
-                                    {...field}
-                                 />
-                              </FormControl>
-                              <FormMessage />
-                           </FormItem>
-                        )}
-                     />
-
-                     {/* Submit button will go here */}
-                     <LoadingButton
-                        pending={form.formState.isSubmitting}
-                     >
-                        Sign in
-                     </LoadingButton>
-                  </form>
-               </Form>
-
-               <span className="text-sm text-gray-500 text-center block my-2">
-                  or
-               </span>
-               <form className="w-full" action={handleGoogleSignin}>
-                  <Button
-                     variant="outline"
-                     className="w-full"
-                     type="submit"
-                  >
-                     Sign in with Google
-                  </Button>
-               </form>
+               <CredentialsSignInForm form={form} onSubmit={onSubmit} />
+               <GoogleSignInButton />
             </CardContent>
+            <CardFooter className="flex flex-col gap-2">
+               <p>
+                  Don&apos;t have an account?{" "}
+                  <a href="/auth/signup" className="text-blue-500 hover:underline">
+                     Sign up
+                  </a>
+               </p>
+               <a href="/auth/forgot-password" className="text-blue-500 hover:underline">
+                  Forgot your password?
+               </a>
+            </CardFooter>
          </Card>
       </div>
    );

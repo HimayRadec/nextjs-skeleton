@@ -1,5 +1,15 @@
 import { Button } from "@/components/ui/button";
 
+
+/**
+ * A button component that displays its children by default, but shows a spinning loader icon when an action is pending.
+ *
+ * @remarks
+ * This is a normal button that will spin while the action is loading or being performed.
+ *
+ * @param pending - If true, the button is disabled and shows a loading spinner.
+ * @param children - The content to display inside the button when not loading.
+ */
 export default function LoadingButton({
    pending,
    children,

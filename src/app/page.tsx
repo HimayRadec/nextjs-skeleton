@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
-import { SignInButton } from "@/components/signin-button";
+import { SignInButton } from "@/components/signin-buttons";
 
 import { auth } from "@/auth";
 
