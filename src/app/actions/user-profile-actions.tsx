@@ -7,10 +7,8 @@ import prisma from "@/lib/prisma";
 
 // TODO: extract the success messages to a constant
 export async function updateUsername(username: string) {
-   console.log("updateUsername called with username:", username);
 
    const session = await auth();
-   console.log("Session data:", session);
 
    if (!session?.user?.id) {
       return { success: false, message: "Unauthorized." };
@@ -22,9 +20,7 @@ export async function updateUsername(username: string) {
       where: { username: normalizedUsername },
    });
 
-   if (existingUser) {
-      return { success: false, message: "Username already exists." };
-   }
+   if (existingUser) return { success: false, message: "Username already exists." };
 
    await prisma.user.update({
       where: { id: session.user.id },

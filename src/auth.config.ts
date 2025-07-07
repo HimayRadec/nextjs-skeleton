@@ -60,9 +60,13 @@ const config = {
 
             return {
                id: user.id,
+               name: user.name ?? "",
+               email: user.email ?? "",
+               image: user.image ?? "/images/default-avatar.jpg",
                username: user.username ?? undefined,
                role: user.role,
-            }
+            };
+
 
          }
       })

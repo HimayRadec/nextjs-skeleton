@@ -11,7 +11,7 @@ import { signUpSchema } from "@/lib/zod";
 import {
    finishCredentialsSignUp,
    handleCredentialsSignUp,
-} from "@/app/actions/authActions";
+} from "@/app/actions/auth-actions";
 import CredentialsSignUpForm from "@/components/forms/credentials-signup-form";
 import { GoogleSignInButton } from "@/components/signin-buttons";
 

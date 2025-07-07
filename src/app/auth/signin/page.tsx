@@ -13,7 +13,7 @@ import { GoogleSignInButton } from "@/components/signin-buttons";
 import { z } from "zod";
 import { emailSignInSchema } from "@/lib/zod";
 import ErrorMessage from "@/components/error-message";
-import { handleCredentialsSignin } from "@/app/actions/authActions";
+import { handleCredentialsSignin } from "@/app/actions/auth-actions";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
