@@ -16,7 +16,7 @@ type CredentialsSignUpFormProps = {
 const FIELDS = [
    {
       name: 'name',
-      placeholder: 'Enter your full name',
+      placeholder: 'Enter your name',
    },
    {
       name: 'email',

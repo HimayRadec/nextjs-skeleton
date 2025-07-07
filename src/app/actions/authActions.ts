@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { signIn, signOut, auth } from "@/auth";
 import { signUpSchema } from "@/lib/zod";
 import { AuthError } from "next-auth";
 
@@ -84,16 +84,19 @@ export async function handleCredentialsSignUp({ name, email, password, confirmPa
    }
 }
 
-export async function handleUsernameUpdate({ userId, username }: {
-   userId: string,
-   username: string
-}) {
+export async function handleUsernameUpdate({ username }: { username: string }) {
    try {
+      const session = await auth();
+
+      if (!session || !session.user || !session.user.id) {
+         return { success: false, message: "Unauthorized." };
+      }
+
+      const userId = session.user.id;
+
       // Check if the username is already taken
       const existingUser = await prisma.user.findUnique({
-         where: {
-            username,
-         },
+         where: { username },
       });
 
       if (existingUser) {
@@ -107,8 +110,7 @@ export async function handleUsernameUpdate({ userId, username }: {
       });
 
       return { success: true, message: "Username updated successfully." };
-   }
-   catch (error) {
+   } catch (error) {
       console.error("Error updating username:", error);
       return { success: false, message: "An unexpected error occurred. Please try again." };
    }

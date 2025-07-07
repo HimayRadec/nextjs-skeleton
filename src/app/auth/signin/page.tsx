@@ -1,7 +1,6 @@
 "use client";
 
 import {
-   Card,
    CardContent,
    CardDescription,
    CardFooter,

@@ -8,7 +8,7 @@ import { signOut } from "next-auth/react"
 // React Hook Form
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { USERNAME_MINIMUM_LENGTH, usernameChangeSchema } from "@/lib/zod"
+import { usernameChangeSchema } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 // UI Components
@@ -17,6 +17,7 @@ import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 
 import SetUsernameForm from "@/components/forms/set-username-form"
 import { Button } from "@/components/ui/button"
 import { handleUsernameUpdate } from "@/app/actions/authActions"
+import ErrorMessage from "@/components/error-message";
 
 export default function UsernamePage() {
    return (
@@ -32,35 +33,18 @@ function UpdateUsernameForm() {
    const [globalError, setGlobalError] = useState<string>("");
 
 
-   const formSchema = z.object({
-      username: z.string().min(2, {
-         message: `Username must be at least ${USERNAME_MINIMUM_LENGTH} characters.`,
-      }),
-   })
-
-   const form = useForm<z.infer<typeof formSchema>>({
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-         username: "",
-      },
+   const form = useForm<z.infer<typeof usernameChangeSchema>>({
+      resolver: zodResolver(usernameChangeSchema),
+      defaultValues: { username: "" },
    })
 
    const onSubmit = async (values: z.infer<typeof usernameChangeSchema>) => {
       try {
-         if (!session?.user?.id) {
-            setGlobalError("User is not logged in.");
-            return;
-         }
-
-         const result = await handleUsernameUpdate({
-            userId: session.user.id,
-            username: values.username,
-         });
+         const result = await handleUsernameUpdate(values);
 
          if (result?.success) {
-            await update({ ...session.user, username: values.username });
-            // await update({ ...session.user, username: values.username });
-            router.push("/dashboard"); // ✅ Redirect after success
+            await update({ ...session?.user, username: values.username });
+            router.push("/dashboard");
             return;
          }
 
@@ -84,7 +68,8 @@ function UpdateUsernameForm() {
                Please enter a username to complete your profile setup.
             </CardDescription>
          </CardHeader>
-         <CardContent>
+         <CardContent className="space-y-4">
+            {globalError && <ErrorMessage error={globalError} />}
             <SetUsernameForm
                form={form}
                onSubmit={onSubmit}

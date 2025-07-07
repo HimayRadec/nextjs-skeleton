@@ -60,7 +60,7 @@ const config = {
 
             return {
                id: user.id,
-               username: user.username ?? "Username not set",
+               username: user.username ?? undefined,
                role: user.role,
             }
 
