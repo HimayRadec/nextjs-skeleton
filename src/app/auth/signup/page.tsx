@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { signUpSchema } from "@/lib/zod";
 import {
-   handleCredentialsSignin,
+   finishCredentialsSignUp,
    handleCredentialsSignUp,
 } from "@/app/actions/authActions";
 import CredentialsSignUpForm from "@/components/forms/credentials-signup-form";
@@ -37,17 +37,8 @@ export default function SignUp() {
    const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
       try {
          const result: ServerActionResponse = await handleCredentialsSignUp(values);
-         if (result.success) {
-            console.log("Account created successfully.");
-            const valuesForSignin = {
-               email: values.email,
-               password: values.password,
-            };
-            await handleCredentialsSignin(valuesForSignin);
-         }
-         else {
-            setGlobalError(result.message);
-         }
+         if (result.success) await finishCredentialsSignUp({ email: values.email, password: values.password });
+         else setGlobalError(result.message);
       }
       catch (error) {
          setGlobalError("An unexpected error occurred. Please try again.");

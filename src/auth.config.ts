@@ -76,17 +76,18 @@ const config = {
 
          const { pathname } = nextUrl;
 
-         // Redirect to the dashboard if logged in and trying to access the signin or sign up page
-         if (userIsLoggedIn && authRoutes.includes(pathname)) return Response.redirect(new URL('/dashboard', nextUrl));
-
-         // Redirect to set username page if user is logged in but username is missing
+         // // Redirect to set username page if user is logged in but username is missing
          if (userIsLoggedIn && usernameIsNotSet) return Response.redirect(new URL(setUsernameRoute, nextUrl));
 
-         // Redirect to signin page if user is not logged in and trying to access the set username page
+         // // Redirect to the dashboard if logged in and trying to access the signin or sign up page
+         if (userIsLoggedIn && authRoutes.includes(pathname)) return Response.redirect(new URL('/dashboard', nextUrl));
+
+         // // Redirect to signin page if user is not logged in and trying to access the set username page
          if (!userIsLoggedIn && pathname === setUsernameRoute) return Response.redirect(new URL('/auth/signin', nextUrl));
 
-         // Limit access to admin routes to admin users only
+         // // Limit access to admin routes to admin users only
          if (pathname.startsWith('/admin') && role !== 'admin') return Response.redirect(new URL('/dashboard', nextUrl));
+
          return userIsLoggedIn
       },
 
@@ -107,7 +108,7 @@ const config = {
          session.user.username = token.username;
          session.user.role = token.role;
 
-         console.log(`[AUTHJS SESSION]: ${JSON.stringify(session, null, 2)}\n`);
+         // console.log(`[AUTHJS SESSION]: ${JSON.stringify(session, null, 2)}\n`);
          return session;
       }
 

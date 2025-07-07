@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut, auth } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { signUpSchema } from "@/lib/zod";
 import { AuthError } from "next-auth";
 
@@ -13,6 +13,41 @@ export async function handleCredentialsSignin({ email, password }: {
 }) {
    try {
       await signIn("credentials", { email, password, redirectTo: "/dashboard" });
+   }
+   catch (error) {
+      if (error instanceof AuthError) {
+         switch (error.type) {
+            case 'CredentialsSignin':
+               return {
+                  message: 'Invalid credentials',
+               }
+            default:
+               return {
+                  message: 'Something went wrong.',
+               }
+         }
+      }
+      throw error;
+   }
+}
+
+/**
+ * Attempts to sign in a user using email and password credentials.
+ * If successful, redirects the user to the "/set-username" page.
+ * Handles authentication errors and returns a user-friendly message for known error types.
+ *
+ * @param params - An object containing the user's email and password.
+ * @param params.email - The user's email address.
+ * @param params.password - The user's password.
+ * @returns A promise that resolves to an object with a `message` property if an authentication error occurs,
+ *          or throws the error if it is not an instance of `AuthError`.
+ */
+export async function finishCredentialsSignUp({ email, password }: {
+   email: string,
+   password: string
+}) {
+   try {
+      await signIn("credentials", { email, password, redirectTo: "/set-username" });
    }
    catch (error) {
       if (error instanceof AuthError) {
@@ -84,34 +119,3 @@ export async function handleCredentialsSignUp({ name, email, password, confirmPa
    }
 }
 
-export async function handleUsernameUpdate({ username }: { username: string }) {
-   try {
-      const session = await auth();
-
-      if (!session || !session.user || !session.user.id) {
-         return { success: false, message: "Unauthorized." };
-      }
-
-      const userId = session.user.id;
-
-      // Check if the username is already taken
-      const existingUser = await prisma.user.findUnique({
-         where: { username },
-      });
-
-      if (existingUser) {
-         return { success: false, message: "Username already exists." };
-      }
-
-      // Update the user's username
-      await prisma.user.update({
-         where: { id: userId },
-         data: { username },
-      });
-
-      return { success: true, message: "Username updated successfully." };
-   } catch (error) {
-      console.error("Error updating username:", error);
-      return { success: false, message: "An unexpected error occurred. Please try again." };
-   }
-}

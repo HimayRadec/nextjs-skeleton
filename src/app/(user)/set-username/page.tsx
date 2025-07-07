@@ -16,7 +16,7 @@ import { useSession } from "next-auth/react";
 import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import SetUsernameForm from "@/components/forms/set-username-form"
 import { Button } from "@/components/ui/button"
-import { handleUsernameUpdate } from "@/app/actions/authActions"
+import { updateUsername } from "@/app/actions/user-profile-actions"
 import ErrorMessage from "@/components/error-message";
 
 export default function UsernamePage() {
@@ -39,16 +39,21 @@ function UpdateUsernameForm() {
    })
 
    const onSubmit = async (values: z.infer<typeof usernameChangeSchema>) => {
+      console.log("Form submitted with values:", values);
       try {
-         const result = await handleUsernameUpdate(values);
+         console.log("Attempting to update username...");
+         const result: ServerActionResponse = await updateUsername(values.username);
+         console.log("Result from handleUsernameUpdate:", result);
 
          if (result?.success) {
+            console.log("Username updated successfully:", result);
             await update({ ...session?.user, username: values.username });
             router.push("/dashboard");
             return;
          }
 
          if (result?.message) {
+            console.log("Error updating username:", result.message);
             setGlobalError(result.message);
          }
       }
@@ -70,15 +75,14 @@ function UpdateUsernameForm() {
          </CardHeader>
          <CardContent className="space-y-4">
             {globalError && <ErrorMessage error={globalError} />}
-            <SetUsernameForm
-               form={form}
-               onSubmit={onSubmit}
-            />
+            <SetUsernameForm form={form} onSubmit={onSubmit} />
          </CardContent>
          <CardFooter className="flex flex-col gap-2">
-            <Button variant={"ghost"} onClick={() => signOut({ callbackUrl: "/", redirect: true })}>
-               Sign Out
-            </Button>
+            {!session?.user?.username && (
+               <Button variant={"ghost"} onClick={() => signOut({ callbackUrl: "/", redirect: true })}>
+                  Sign Out
+               </Button>
+            )}
          </CardFooter>
       </div>
    )
