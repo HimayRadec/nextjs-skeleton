@@ -10,9 +10,9 @@ import { z } from "zod";
 import { signUpSchema } from "@/lib/zod";
 import {
    handleCredentialsSignin,
-   handleSignUp,
+   handleCredentialsSignUp,
 } from "@/app/actions/authActions";
-import CredentialsSignUpForm from "@/components/credentials-signup-form";
+import CredentialsSignUpForm from "@/components/forms/credentials-signup-form";
 import { GoogleSignInButton } from "@/components/signin-buttons";
 
 export default function SignUp() {
@@ -36,7 +36,7 @@ export default function SignUp() {
    */
    const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
       try {
-         const result: ServerActionResponse = await handleSignUp(values);
+         const result: ServerActionResponse = await handleCredentialsSignUp(values);
          if (result.success) {
             console.log("Account created successfully.");
             const valuesForSignin = {
@@ -56,7 +56,7 @@ export default function SignUp() {
    };
 
    return (
-      <Card className="w-full border-none">
+      <div className="w-full border-none flex flex-col gap-6 py-6 lg:max-w-lg lg:mx-auto">
          <CardHeader>
             <CardTitle>
                Create Account
@@ -79,6 +79,6 @@ export default function SignUp() {
                </a>
             </p>
          </CardFooter>
-      </Card>
+      </div>
    );
 }

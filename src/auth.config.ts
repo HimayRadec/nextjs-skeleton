@@ -8,6 +8,7 @@ import { NextAuthConfig } from "next-auth";
 
 
 const authRoutes = ["/auth/signin", "/auth/signup"];
+const setUsernameRoute = "/set-username";
 
 const config = {
    pages: {
@@ -71,11 +72,18 @@ const config = {
          // Only allow access if logged in
          const userIsLoggedIn = !!auth?.user;
          const role = auth?.user.role || 'user';
+         const usernameIsNotSet = !auth?.user.username;
 
          const { pathname } = nextUrl;
 
-         // Redirect to the dashboard if logged in and trying to access the signin page
-         if (authRoutes.includes(pathname) && userIsLoggedIn) return Response.redirect(new URL('/dashboard', nextUrl));
+         // Redirect to the dashboard if logged in and trying to access the signin or sign up page
+         if (userIsLoggedIn && authRoutes.includes(pathname)) return Response.redirect(new URL('/dashboard', nextUrl));
+
+         // Redirect to set username page if user is logged in but username is missing
+         if (userIsLoggedIn && usernameIsNotSet) return Response.redirect(new URL(setUsernameRoute, nextUrl));
+
+         // Redirect to signin page if user is not logged in and trying to access the set username page
+         if (!userIsLoggedIn && pathname === setUsernameRoute) return Response.redirect(new URL('/auth/signin', nextUrl));
 
          // Limit access to admin routes to admin users only
          if (pathname.startsWith('/admin') && role !== 'admin') return Response.redirect(new URL('/dashboard', nextUrl));
@@ -85,7 +93,7 @@ const config = {
       jwt({ token, user, trigger, session }) {
          if (user) {
             token.id = user.id as string;
-            token.username = user.username as string || "NOTSET"; //TODO: Remove this once the random username generation is implemented
+            token.username = user.username as string;
             token.role = user.role as string;
          }
          if (trigger === "update" && session) {
@@ -105,6 +113,7 @@ const config = {
 
 
    },
+   debug: true,
 } satisfies NextAuthConfig
 
 export default config

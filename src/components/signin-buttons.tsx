@@ -16,7 +16,7 @@ export function SignInButton() {
 
 export function GoogleSignInButton() {
    const searchParams = useSearchParams()
-   const callbackUrl = searchParams.get("callbackUrl") || "/"
+   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
    return (
       <Button className="w-full" onClick={() => signIn("google", { callbackUrl })}>
          <FcGoogle size={20} />

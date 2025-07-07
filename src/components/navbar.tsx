@@ -4,7 +4,7 @@ export default function Navbar() {
    const NAVITEMS = [
       { href: '/', label: 'Home' },
       { href: '/dashboard', label: 'Dashboard' },
-      { href: '/username', label: 'Username' }
+      { href: '/set-username', label: 'Username' }
    ]
 
    return (

@@ -8,7 +8,7 @@ import {
    CardHeader,
    CardTitle,
 } from "@/components/ui/card"
-import CredentialsSignInForm from "@/components/credentials-signin-form";
+import CredentialsSignInForm from "@/components/forms/credentials-signin-form";
 import { GoogleSignInButton } from "@/components/signin-buttons";
 
 import { z } from "zod";
@@ -69,7 +69,7 @@ export default function SignIn() {
    };
 
    return (
-      <Card className="w-full border-none">
+      <div className="w-full border-none flex flex-col gap-6 py-6 lg:max-w-lg lg:mx-auto">
          <CardHeader>
             <CardTitle>
                Login to your account
@@ -95,6 +95,6 @@ export default function SignIn() {
                Forgot your password?
             </a>
          </CardFooter>
-      </Card>
+      </div>
    );
 }

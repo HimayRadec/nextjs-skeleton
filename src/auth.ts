@@ -12,7 +12,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
    ...authConfig,
    events: {
       async createUser({ user }) {
-         // TODO: Assign a random username to the user
       },
    },
 })

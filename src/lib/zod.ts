@@ -107,3 +107,11 @@ export const signUpSchema = object({
    });
 
 
+
+export const usernameChangeSchema = object({
+   username: string({ required_error: "Username is required" })
+      .min(USERNAME_MINIMUM_LENGTH, `Username must be at least ${USERNAME_MINIMUM_LENGTH} characters`)
+      .max(USERNAME_MAXIMUM_LENGTH, `Username must be less than ${USERNAME_MAXIMUM_LENGTH} characters`)
+      .regex(/^[a-zA-Z0-9_.]+$/, "Username can only contain letters, numbers, underscores, and dots"),
+})
+

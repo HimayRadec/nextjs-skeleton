@@ -12,8 +12,9 @@ export async function handleCredentialsSignin({ email, password }: {
    password: string
 }) {
    try {
-      await signIn("credentials", { email, password, redirectTo: "/" });
-   } catch (error) {
+      await signIn("credentials", { email, password, redirectTo: "/dashboard" });
+   }
+   catch (error) {
       if (error instanceof AuthError) {
          switch (error.type) {
             case 'CredentialsSignin':
@@ -44,7 +45,7 @@ export async function handleSignOut() {
 }
 
 
-export async function handleSignUp({ name, email, password, confirmPassword }: {
+export async function handleCredentialsSignUp({ name, email, password, confirmPassword }: {
    name: string,
    email: string,
    password: string,
@@ -52,9 +53,7 @@ export async function handleSignUp({ name, email, password, confirmPassword }: {
 }) {
    try {
       const parsedCredentials = signUpSchema.safeParse({ name, email, password, confirmPassword });
-      if (!parsedCredentials.success) {
-         return { success: false, message: "Invalid data." };
-      }
+      if (!parsedCredentials.success) return { success: false, message: "Invalid data." };
 
       // check if the email is already taken
       const existingUser = await prisma.user.findUnique({
@@ -81,6 +80,36 @@ export async function handleSignUp({ name, email, password, confirmPassword }: {
    }
    catch (error) {
       console.error("Error creating account:", error);
+      return { success: false, message: "An unexpected error occurred. Please try again." };
+   }
+}
+
+export async function handleUsernameUpdate({ userId, username }: {
+   userId: string,
+   username: string
+}) {
+   try {
+      // Check if the username is already taken
+      const existingUser = await prisma.user.findUnique({
+         where: {
+            username,
+         },
+      });
+
+      if (existingUser) {
+         return { success: false, message: "Username already exists." };
+      }
+
+      // Update the user's username
+      await prisma.user.update({
+         where: { id: userId },
+         data: { username },
+      });
+
+      return { success: true, message: "Username updated successfully." };
+   }
+   catch (error) {
+      console.error("Error updating username:", error);
       return { success: false, message: "An unexpected error occurred. Please try again." };
    }
 }
