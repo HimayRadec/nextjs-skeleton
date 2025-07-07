@@ -15,6 +15,7 @@ const config = {
       signIn: "/auth/signin",
    },
    providers: [
+      // TODO: make sure the providers return the same user object as the credentials provider
       Google({
          // This automatically links Google accounts with existing accounts that have the same email address.
          // allowDangerousEmailAccountLinking: true, 

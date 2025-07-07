@@ -14,10 +14,16 @@ const eslintConfig = [
 
   {
     rules: {
-      // Downgrade to warnings instead of errors
-      "@typescript-eslint/no-unused-vars": ["warn"], // in case TypeScript plugin is active
+      "no-warning-comments": [
+        "warn",
+        { terms: ["todo", "fixme"], location: "anywhere" },
+      ],
+
+      // Downgrade TS unused vars to warning
+      "@typescript-eslint/no-unused-vars": ["warn"],
     },
   },
 ];
+
 
 export default eslintConfig;
