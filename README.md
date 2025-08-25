@@ -1,6 +1,8 @@
 # Next.js Skeleton Project
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). It includes styling with **shadcn/ui**, authentication via **Auth.js (NextAuth)**, and a **MongoDB** database using **Prisma**, with full support for server/client auth and Edge-compatible middleware.
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).  
+It includes **shadcn/ui** for styling, **Auth.js (NextAuth)** for authentication, and **MongoDB with Prisma** for persistence.  
+It’s designed with **App Router**, **Edge middleware compatibility**, and a clean developer workflow.
 
 ---
 
@@ -9,12 +11,14 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ### 1. Clone & Install
 
 ```bash
+git clone https://github.com/you/nextjs-skeleton.git
+cd nextjs-skeleton
 npm install
 ```
 
-### 2. Set Up Environment Variables
+### 2. Environment Variables
 
-Create a `.env` file at the root of the project and add:
+Create a `.env` file in the project root:
 
 ```env
 # MongoDB
@@ -28,149 +32,125 @@ AUTH_GOOGLE_SECRET=your-google-client-secret
 AUTH_SECRET=your-random-auth-secret
 ```
 
-To generate an Auth.js secret:
+Generate an Auth.js secret:
 
 ```bash
 npx auth secret
 ```
 
-### 3. Run Dev Server
+### 3. Prisma Setup (MongoDB)
+
+Run the following to sync the schema and generate the client:
+
+```bash
+npx prisma db push
+npx prisma generate
+```
+
+(Optional) Open Prisma Studio to inspect your DB:
+
+```bash
+npx prisma studio
+```
+
+---
+
+### 4. Run the Dev Server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Visit [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## 🔐 Setting Up Google OAuth
+## 🔐 Setting Up Google OAuth (Optional for Local Dev)
 
-1. Go to [Google Cloud Console - Resource Manager](https://console.cloud.google.com/cloud-resource-manager)
-2. Create a project and select it.
-3. Go to **APIs & Services > OAuth consent screen** and set up the branding. ⚠️ **Add your authorized domain (e.g., localhost or production domain)**.
-4. Go to **Credentials > Create Credentials > OAuth Client ID**:
-
-   * **App Type**: Web
-   * **Authorized JavaScript origins**: `http://localhost:3000`
-   * **Authorized redirect URIs**: `http://localhost:3000/api/auth/callback/google`
-
-Paste the credentials into `.env`.
+1. Go to [Google Cloud Console](https://console.cloud.google.com/cloud-resource-manager) and create/select a project.
+2. Configure **OAuth consent screen** (set branding + add authorized domains).
+3. Under **Credentials → Create Credentials → OAuth Client ID**:
+   - **App Type**: Web  
+   - **Authorized JavaScript origins**: `http://localhost:3000`  
+   - **Authorized redirect URIs**: `http://localhost:3000/api/auth/callback/google`
+4. Copy credentials into `.env`.
 
 ---
 
-## 🨠 Auth.js Middleware vs Adapter (Edge Runtime Note)
+## Auth.js Advanced Notes (Edge Runtime & Middleware)
 
-This project separates **auth config** and **auth instance** for compatibility with middleware:
+This repo separates config to support middleware safely:
 
-* `auth.config.ts`: Includes provider setup, routes (e.g., custom signin), and `authorized()` callback. ✅ **Safe for Edge runtime**
-* `auth.ts`: Full `NextAuth()` instance with the Prisma MongoDB adapter and session strategy. ❌ **Not Edge-compatible** — avoid importing this in `middleware.ts`
-* `middleware.ts`: Uses `NextAuth(authConfig)` only with the edge-safe `auth.config.ts` to avoid runtime errors.
+- `auth.config.ts`: Providers, routes, and `authorized()` callback. ✅ Edge-compatible  
+- `auth.ts`: Full `NextAuth()` instance with Prisma adapter. ❌ Not Edge-compatible  
+- `middleware.ts`: Uses `NextAuth(authConfig)` only, to stay safe in Edge runtime.
 
-This separation ensures:
+This ensures:
 
-* ✅ Secure route protection in middleware
-* ✅ Full DB-powered sessions on the server
-
----
-
-## 🧹 Prisma Setup (MongoDB)
-
-This project uses Prisma with MongoDB as its adapter. Key commands:
-
-```bash
-# Apply schema changes to MongoDB
-npx prisma db push
-
-# Generate the Prisma Client
-npx prisma generate
-
-# Open the Prisma GUI (Prisma Studio)
-npx prisma studio
-```
-
-If you delete documents manually from MongoDB Atlas, no additional syncing is needed unless you're altering your schema — in which case, rerun:
-
-```bash
-npx prisma db push
-```
-
-> Be sure your schema contains the correct `DATABASE_URL` in `.env`
-
-```env
-DATABASE_URL="mongodb+srv://USER:PASSWORD@cluster.mongodb.net/DATABASENAME?retryWrites=true&w=majority&appName=APPNAME"
-```
-
----
-
-## 📉 Dependencies Used
-
-* **Next.js 15** — App Router + Edge support
-* **shadcn/ui** — Component and theme system
-* **tailwindcss** — Utility-first styling
-* **next-themes** — Theme toggling
-* **Auth.js (NextAuth)** — Authentication
-* **Prisma + MongoDB** — DB persistence with `@prisma/client` and `@prisma/adapter-mongodb`
-* **zod** — Schema validation for forms
-* **react-icons** — Optional icon support
+- ✅ Secure route protection in middleware  
+- ✅ Full DB-backed sessions on the server  
 
 ---
 
 ## ✅ Features
 
-* 🔐 Google OAuth login
-* 🨠 Credentials-based login with bcrypt password hashing
-* 🧠 Session-based user state
-* 👤 Users are automatically assigned a random username on first sign-in
-* 🔄 Users can update their username with a **30-day cooldown**
-* 🔎 Middleware-protected routes with role-based support
-* 🎨 Theme support with `shadcn/ui` and `next-themes`
+- 🔐 Google OAuth login  
+- 🗝️ Credentials login with bcrypt hashing  
+- 🧠 Session-based user state  
+- 👤 Users auto-assigned random usernames (with 30-day cooldown on changes)  
+- 🔎 Middleware-protected routes with role-based access  
+- 🎨 Theme support via `shadcn/ui` + `next-themes`  
+
+---
+
+## 📉 Dependencies
+
+### Core
+- **Next.js 15** — App Router + Edge  
+- **tailwindcss** — Utility-first styling  
+- **shadcn/ui** — Component system  
+- **Auth.js (NextAuth)** — Authentication  
+- **Prisma + MongoDB** — Persistence  
+
+### Enhancements
+- **next-themes** — Theme toggling  
+- **zod** — Schema validation  
+- **react-icons** — Optional icon support  
 
 ---
 
 ## 🔤 Naming Conventions
 
-* `kebab-case`: file and folder names (e.g., `set-username.ts`)
-* `PascalCase`: React components (e.g., `LoginForm.tsx`)
-* `camelCase`: variables, functions, and data properties
+- `kebab-case`: files & folders (`set-username.ts`)  
+- `PascalCase`: React components (`LoginForm.tsx`)  
+- `camelCase`: vars & functions (`getUserData`)  
 
-> Based on [Next.js naming convention practices](https://dev.to/vikasparmar/nextjs-component-naming-conventions-best-practices-for-file-and-component-names-39o2)
+> Based on [Next.js naming conventions](https://dev.to/vikasparmar/nextjs-component-naming-conventions-best-practices-for-file-and-component-names-39o2).
 
 ---
 
-## 📦 Commit Message Format
+## 📦 Commit Messages
+
+Follow [Conventional Commits](https://www.conventionalcommits.org):
 
 ```bash
-type(scope?): Action
+type(scope?): action
 ```
 
 ### Common Types
-
-- `build`
-- `chore`
-- `ci`
-- `docs`
-- `feat`
-- `fix`
-- `perf`
-- `refactor`
-- `revert`
-- `style`
-- `test`
+- `feat`, `fix`, `refactor`, `docs`, `test`, `style`, `chore`, `ci`, `build`, `perf`, `revert`
 
 ### Examples
-
 ```bash
-chore: ran tests on travis ci
-feat(blog): Added a comment section
+feat(auth): add Google OAuth login
+fix(ui): correct theme toggle in dark mode
 ```
 
 ---
 
 ## 📙 References
 
-* [Next.js Documentation](https://nextjs.org/docs)
-* [Auth.js Docs](https://authjs.dev)
-* [shadcn/ui Docs](https://ui.shadcn.com)
-* [Prisma Docs](https://www.prisma.io/docs)
-* [Conventional Commits](https://www.conventionalcommits.org)
+- [Next.js Docs](https://nextjs.org/docs)  
+- [Auth.js Docs](https://authjs.dev)  
+- [shadcn/ui Docs](https://ui.shadcn.com)  
+- [Prisma Docs](https://www.prisma.io/docs)  
